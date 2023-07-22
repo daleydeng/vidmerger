@@ -25,6 +25,8 @@ use helpers::io_helper::remove_file;
 use helpers::str_helper::split;
 use system_shutdown::shutdown;
 
+
+
 fn main() -> Result<(), Error> {
     exit_when_ffmpeg_not_available();
     let matches = Cli::init().get_matches();
@@ -41,6 +43,7 @@ fn main() -> Result<(), Error> {
         .unwrap_or("0")
         .parse::<f32>()
         .unwrap();
+    let use_natural_sort = matches.get_flag("natural-sort");
 
     for file_format in split(formats) {
         let ffmpeg_output_file = target_dir.join(format!("output.{}", file_format));
@@ -49,7 +52,7 @@ fn main() -> Result<(), Error> {
 
         let all_files_on_target_dir: Vec<PathBuf> = read_dir(target_dir).unwrap();
         let mut files_to_merge = filter_files(all_files_on_target_dir, &file_format);
-        let mut files_to_merge_as_strings = path_bufs_to_sorted_strings(&files_to_merge);
+        let mut files_to_merge_as_strings = path_bufs_to_sorted_strings(&files_to_merge, use_natural_sort);
         let mut ffmpeg_input_content = gen_input_file_content_for_ffmpeg(files_to_merge_as_strings);
 
         if !ffmpeg_input_content.is_empty() {
@@ -65,7 +68,7 @@ fn main() -> Result<(), Error> {
 
             if !skip_fps_changer {
                 files_to_merge = change_fps(files_to_merge, &tmp_dir, fps_from_cli);
-                files_to_merge_as_strings = path_bufs_to_sorted_strings(&files_to_merge);
+                files_to_merge_as_strings = path_bufs_to_sorted_strings(&files_to_merge, use_natural_sort);
                 ffmpeg_input_content = gen_input_file_content_for_ffmpeg(files_to_merge_as_strings);
             }
 

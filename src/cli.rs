@@ -1,4 +1,4 @@
-use clap::{Arg, ArgMatches, Command};
+use clap::{Arg, ArgMatches, Command, ArgAction};
 
 pub struct Cli {
     matches: ArgMatches,
@@ -37,6 +37,12 @@ impl Cli {
         .arg(Arg::new("skip-wait")
             .long("skip-wait")
             .help("Skips the wait time for reading")
+        )
+        .arg(Arg::new("natural-sort")
+            .long("natural-sort")
+            .short('n')
+            .action(ArgAction::SetTrue)
+            .help("whether use natural sort")
         )
         .arg_required_else_help(true)
         .get_matches();

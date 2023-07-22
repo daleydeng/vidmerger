@@ -4,6 +4,7 @@ use std::fs::{self, canonicalize, File};
 use std::io::{Result, Write};
 use std::path::{Path, PathBuf};
 use std::process::exit;
+use alphanumeric_sort::sort_str_slice;
 
 pub fn exit_when_ffmpeg_not_available() {
     if which::which("ffmpeg").is_err() {
@@ -44,7 +45,7 @@ pub fn create(path: &PathBuf, buf: String) -> &PathBuf {
     path
 }
 
-pub fn path_bufs_to_sorted_strings(path_bufs: &[PathBuf]) -> Vec<String> {
+pub fn path_bufs_to_sorted_strings(path_bufs: &[PathBuf], use_nature_sort: bool) -> Vec<String> {
     let mut strings: Vec<String> = path_bufs
         .iter()
         .map(|path_buf| {
@@ -54,6 +55,13 @@ pub fn path_bufs_to_sorted_strings(path_bufs: &[PathBuf]) -> Vec<String> {
                 .to_string()
         })
         .collect();
-    strings.sort();
-    strings
+
+    if use_nature_sort {
+        let mut strs: Vec<&str> = strings.iter().map(String::as_str).collect();
+        sort_str_slice(strs.as_mut_slice());
+        strs.into_iter().map(str::to_owned).collect()
+    } else {
+        strings.sort();
+        strings
+    }
 }

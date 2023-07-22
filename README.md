@@ -1,5 +1,10 @@
 <!-- https://github.com/elsewhencode/project-guidelines/blob/master/README.sample.md -->
 
+
+## Changeset by daley
+- Vidmerger with natural sort supported 
+- Fix bugs for parsing file extension under windows
+
 <p align="center"><a><img src="http://www.angelfire.com/clone/saiyansforever/images/VegettoFusionHD.gif" alt="fusion gif" height="256"/></a></p>
 
 <h1 align="center">Vidmerger</h1>
